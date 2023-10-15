@@ -62,8 +62,9 @@ void Chat::registration(int menu, bool* check_user){
 		
 		if (!finding(user.user_login()) && check_password(user.user_password(), user.user_login())) {
 				system("cls");
+				get_user(user.user_login(), user.user_name());
 				std::cout << "\n\n Вы вошли как:\n\n";
-				_users.at(user.user_login()).showUser();
+				_users.at(_active_user_login).showUser();
 				*check_user = true;
 		}
 		else {
@@ -94,9 +95,11 @@ void Chat::registration(int menu, bool* check_user){
 		user.get_user_password(inputPL.input());
 
 		_users.emplace(user.user_login(), user);
+		get_user(user.user_login(), user.user_name());
+
 		system("cls");
 		std::cout << "\n\n Вы зарегистрированы как:\n\n";
-		_users.at(user.user_login()).showUser();
+		_users.at(_active_user_login).showUser();
 	}
 }
 
