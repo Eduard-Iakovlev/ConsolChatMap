@@ -129,11 +129,13 @@
   <ItemGroup>
     <ClInclude Include="Chat.h" />
     <ClInclude Include="Consol_Input.h" />
+    <ClInclude Include="Hash.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Chat.cpp" />
+    <ClCompile Include="Hash.cpp" />
     <ClCompile Include="main_Chatcpp.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="User.cpp" />

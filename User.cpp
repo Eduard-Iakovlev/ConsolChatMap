@@ -32,11 +32,11 @@ void User::get_user_login(std::string login){
 }
 
 void User::get_user_password(std::string password){
-	_password = password;
+	std::size_t hashed = hash_fn(password);
+	_password = hashed;
 }
 
-void User::clear_login()
-{
+void User::clear_login(){
 	_login.clear();
 }
 

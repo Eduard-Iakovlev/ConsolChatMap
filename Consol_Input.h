@@ -39,8 +39,6 @@ public:
 				_str[_counter] = '\0';
 				std::cout << " " << "\b";
 			}
-
-
 		}
 
 		if constexpr (std::is_same_v<T, int>)  return atoi(_str);

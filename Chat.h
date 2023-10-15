@@ -1,11 +1,12 @@
 #pragma once
 #include <vector>
 #include <map>
+#include <cstdlib>
 #include "User.h"
 #include "Message.h"
 #include "Consol_Input.h"
-#include <cstdlib>
 #include "Windows.h"
+#include "Hash.h"
 
 class Chat
 {
