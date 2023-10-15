@@ -7,8 +7,8 @@ Chat::Chat()
 	greeting();
 }
 
-Chat::Chat(std::string active_user_login, std::string active_recipient_login, std::string active_user_name, int active_user_ID, int active_recipirnt_ID) :
-	_active_user_login(active_user_login), _active_recipient_login(active_recipient_login), _active_user_name(active_user_name), _active_user_ID(active_user_ID), _active_recipient_ID(active_recipirnt_ID) {}
+Chat::Chat(std::string active_user_login, std::string active_recipient_login, std::string active_user_name) :
+	_active_user_login(active_user_login), _active_recipient_login(active_recipient_login), _active_user_name(active_user_name){}
 
 
 void Chat::greeting(){
@@ -37,6 +37,16 @@ int Chat::menu_chat(){
 	return inputMC.input();
 }
 
+bool Chat::finding(std::string login){
+	if (_users.find(login) == _users.end()) return true;
+	else return false;
+}
+
+bool Chat::check_password(std::string password, std::string login){
+	if (_users.at(login).user_password() == password) return true;
+	else return false;
+}
+
 void Chat::registration(int menu, bool* check_user){
 	User user;
 	Universal_Input<std::string> inputPL(_fsymbolLogPass, _lsymbolLogPass);
@@ -49,22 +59,19 @@ void Chat::registration(int menu, bool* check_user){
 		std::cout << "\n Введите пароль: ";
 		user.get_user_password(inputPL.input());
 		int counter = 0;
-
-		for (User i : _users)		{
-			if (user.user_login() == i.user_login() && user.user_password() == i.user_password())			{
-				get_user(counter, i.user_login(), i.user_name());
+		
+		if (!finding(user.user_login()) && check_password(user.user_password(), user.user_login())) {
 				system("cls");
 				std::cout << "\n\n Вы вошли как:\n\n";
-				_users.at(counter).showUser();
+				_users.at(user.user_login()).showUser();
 				*check_user = true;
-			}
-			counter++;
 		}
-		if (*check_user == false)		{
+		else {
 			std::cout << "\n Не верный логин или пароль!";
 			Sleep(2000);
 			return;
 		}
+
 	}
 	// регистрация нового пользователя
 	else{
@@ -76,25 +83,20 @@ void Chat::registration(int menu, bool* check_user){
 		do		{
 			check_login = true;
 			user.get_user_login(inputPL.input());
-			for (User i : _users)			{
-				if (user.user_login() == i.user_login())				{
-					user.clear_login();
-					std::cout << "\n Данный логин занят, выберите другой: ";
-					check_login = false;
-					break;
-				}
+			if (!finding(user.user_login())) {
+				user.clear_login();
+				std::cout << "\n Данный логин занят, выберите другой: ";
+				check_login = false;
 			}
 		} while (!check_login);
 
 		std::cout << "\n Введите пароль (латинский алфавит, цифры, символы): ";
 		user.get_user_password(inputPL.input());
 
-		_users.push_back(user);
-		int size = _users.size() - 1;
-		get_user(size, _users.at(size).user_login(), _users.at(size).user_name());
+		_users.emplace(user.user_login(), user);
 		system("cls");
 		std::cout << "\n\n Вы зарегистрированы как:\n\n";
-		_users.at(size).showUser();
+		_users.at(user.user_login()).showUser();
 	}
 }
 
@@ -103,7 +105,7 @@ void Chat::reg_all_user(){
 	user.get_user_login("ALL_USERS");
 	user.get_user_password("admin");
 	user.get_user_name("общий чат");
-	_users.push_back(user);
+	_users.emplace(user.user_login(), user);
 }
 
 // вывод списка участников чата
@@ -112,15 +114,13 @@ void Chat::showListUsers(){
 	clear_show_user();
 	std::cout << "\n Участники чата:\n\n";
 
-	for (User user : _users){
+	for (std::map<std::string, User>::iterator it = _users.begin(); it != _users.end(); it++) {
 		counter++;
-		if ((counter - 1) == _active_user_ID) continue;
+		if (it->second.user_login() == _active_user_login) continue;
 		std::cout << counter << " - ";
-		if ((counter - 1) != 0) user.showUser();
-		else{
-			user.showUserName();
-			std::cout << "\n";
-		}
+		if (it->second.user_login() == "ALL_USERS") it->second.showUserName();
+		else it->second.showUser();
+		std::cout << "\n";
 	}
 }
 
@@ -136,15 +136,13 @@ std::string Chat::active_recipient_login(){
 	return _active_recipient_login;
 }
 
-void Chat::get_user(int id, std::string login, std::string name)
+void Chat::get_user(std::string login, std::string name)
 {
-	_active_user_ID = id;
 	_active_user_login = login;
 	_active_user_name = name;
 }
 
 void Chat::out_user(){
-	_active_user_ID = 0;
 	_active_user_login = '\0';
 	_active_user_name = '\0';
 
@@ -152,6 +150,7 @@ void Chat::out_user(){
 
 void Chat::get_recipient(int menu){
 	Universal_Input<int> inputID('0', '9');
+	int counter = 0;
 
 	if (menu == 2) _active_recipient_login = "ALL_USERS";
 	else{
@@ -164,9 +163,14 @@ void Chat::get_recipient(int menu){
 			else break;
 
 		} while (true);
-		id -= 1;
-		_active_recipient_login = _users.at(id).user_login();
-		_active_recipient_ID = id;
+
+		std::map<std::string, User>::iterator it = _users.begin();
+		for (; it != _users.end(); it++) {
+			counter++;
+			if (counter == id) break;
+		}
+		
+		_active_recipient_login = it->second.user_login();
 	}
 }
 
@@ -193,7 +197,7 @@ void Chat::send_message(){
 			clear_show_user();
 			std::cout << " Сообщение для ";
 			if (_active_recipient_login == "ALL_USERS") std::cout << " всем";
-			else _users.at(_active_recipient_ID).showUserName();
+			else _users.at(_active_recipient_login).showUserName();
 			std::cout << " отправлено \n";
 			break;
 		}
@@ -204,7 +208,7 @@ void Chat::send_message(){
 void Chat::show_message_list(){
 	clear_show_user();
 	std::cout << "\n Беседа с \n";
-	_users.at(_active_recipient_ID).showUser();
+	_users.at(_active_recipient_login).showUser();
 	for (Message i : _messages){
 		if (_active_user_login == i.login_sender() && _active_recipient_login == i.login_recipient() && _active_recipient_login != "ALL_USERS"
 			|| _active_user_login == i.login_recipient() && _active_recipient_login == i.login_sender()){
@@ -232,5 +236,5 @@ void Chat::no_users(){
 void Chat::clear_show_user()
 {
 	system("cls");
-	_users.at(_active_user_ID).showUser();
+	_users.at(_active_user_login).showUser();
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 
+
 class User{
 public:
 	User() = default;
@@ -13,6 +14,8 @@ public:
 	std::string user_name();
 	std::string user_login();
 	std::string user_password();
+
+
 
 	void get_user_name(std::string);
 	void get_user_login(std::string);

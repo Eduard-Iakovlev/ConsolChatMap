@@ -11,12 +11,14 @@ class Chat
 {
 public:
 	Chat();
-	Chat(std::string, std::string, std::string, int, int);
+	Chat(std::string, std::string, std::string);
 	void greeting();
 	void farewell();
 	int logOrReg();
 	int menu_chat();
 
+	bool finding(std::string);
+	bool check_password(std::string, std::string);
 	void registration(int, bool*);
 	void reg_all_user();
 
@@ -26,7 +28,7 @@ public:
 	std::string active_recipient_login();
 
 
-	void get_user(int, std::string, std::string);
+	void get_user(std::string, std::string);
 	void out_user();
 	void get_recipient(int);
 
@@ -43,13 +45,11 @@ public:
 
 
 private:
-	std::vector<User> _users;
+	std::map <std::string, User> _users;
 	std::vector<Message> _messages;
 	std::string _active_user_login;
 	std::string _active_recipient_login;
 	std::string _active_user_name;
-	int _active_user_ID;
-	int _active_recipient_ID;
 	char _fsymbolLogPass = 48;
 	char _lsymbolLogPass = 126;
 	char _fsymbolLogMessage = 192;

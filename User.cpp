@@ -1,7 +1,7 @@
 #include "User.h"
 
 User::User(std::string name, std::string login, std::string password) :
-	_name{ name }, _login{ login }, _password{ password } {}
+	_name{ name }, _login{ login }, _password{ password}{}
 
 void User::showUser(){
 	std::cout << " Логин:" << _login << " / ";
