@@ -14,7 +14,7 @@ public:
 
 	T input() {
 
-		_str[256] = {};
+		_str[255] = {};
 		while (true) {
 			_str[_counter] = _getch();
 
@@ -51,7 +51,7 @@ private:
 	char _last_symbol{};
 	const char _back_space{ 8 };
 	const char _enter{ 13 };
-	char _str[256]{};
+	char _str[255]{};
 	int _counter{ 0 };
 };
 
