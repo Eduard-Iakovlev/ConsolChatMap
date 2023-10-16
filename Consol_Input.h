@@ -14,6 +14,7 @@ public:
 
 	T input() {
 
+		_str[256] = {};
 		while (true) {
 			_str[_counter] = _getch();
 

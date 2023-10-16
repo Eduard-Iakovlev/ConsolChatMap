@@ -4,11 +4,11 @@ User::User(std::string name, std::string login, std::string password) :
 	_name{ name }, _login{ login }, _password{ password}{}
 
 void User::showUser(){
-	std::cout << " Логин:" << _login << " / ";
-	std::cout << " Имя:" << _name << "\n";
+	std::cout <<  _login << " / ";
+	std::cout <<  _name << "\n";
 }
 void User::showUserName(){
-	std::cout << _name;
+	std::cout << _name << "\n";
 }
 
 std::string User::user_name(){

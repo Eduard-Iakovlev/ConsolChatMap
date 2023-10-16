@@ -62,7 +62,7 @@ void Chat::registration(int menu, bool* check_user){
 		
 		if (!finding(user.user_login()) && check_password(user.user_password(), user.user_login())) {
 				system("cls");
-				get_user(user.user_login(), user.user_name());
+				get_user(user.user_login(), _users.at(user.user_login()).user_name());
 				std::cout << "\n\n Вы вошли как:\n\n";
 				_users.at(_active_user_login).showUser();
 				*check_user = true;
@@ -225,7 +225,7 @@ void Chat::show_message_list(){
 void Chat::one_user(){
 	std::cout << " вы пока единственный пользователь. \n Зайдите попозже, когда ещё кто ни будь зарегистрируется.\n";
 	out_user();
-	Sleep(3000);
+	Sleep(2000);
 	system("cls");
 
 }
