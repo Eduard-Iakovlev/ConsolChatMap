@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <conio.h>
 
 
@@ -14,7 +15,6 @@ public:
 
 	T input() {
 
-		_str[255] = {};
 		while (true) {
 			_str[_counter] = _getch();
 
@@ -41,9 +41,13 @@ public:
 				std::cout << " " << "\b";
 			}
 		}
-
 		if constexpr (std::is_same_v<T, int>)  return atoi(_str);
 		else return std::string(_str);
+	}
+
+	void clear() {
+		_str[0] = '\0';
+		_counter = 0;
 	}
 
 private:
@@ -51,7 +55,7 @@ private:
 	char _last_symbol{};
 	const char _back_space{ 8 };
 	const char _enter{ 13 };
-	char _str[255]{};
+	char _str[256]{};
 	int _counter{ 0 };
 };
 

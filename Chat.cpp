@@ -86,6 +86,7 @@ void Chat::registration(int menu, bool* check_user){
 			user.get_user_login(inputPL.input());
 			if (!finding(user.user_login())) {
 				user.clear_login();
+				inputPL.clear();
 				std::cout << "\n Данный логин занят, выберите другой: ";
 				check_login = false;
 			}
